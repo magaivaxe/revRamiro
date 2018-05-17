@@ -39,15 +39,11 @@ class BSInvalidRangeException extends RuntimeException {
     @Override
     public String getMessage() {
         switch (flag){
-            case 0:
-                return "Invalid initial position: " + data1;
-            case 1:
-                return "Invalid final position: " + data2;
-            case 2:
-                return "Initial position "+ data1
+            case 0: return "Invalid initial position: " + data1;
+            case 1: return "Invalid final position: " + data2;
+            case 2: return "Initial position "+ data1
                         + " greater than final position " + data2;
-            default:
-                return "Unknow invalid range code";
+            default: return "Unknow invalid range code";
         }
             
     }
@@ -125,6 +121,25 @@ public class BitString {
     
     public boolean equals(BitString BS1){
         return Arrays.equals(this.bsdata, BS1.bsdata);
+    }
+    
+    public byte [] toByteArray(){
+        int sizeResult = this.bsdata.length / 8;
+        if (this.bsdata.length % 8 > 0) { sizeResult++; }
+        int size = 8 * sizeResult;
+        byte [] a = Arrays.copyOf(this.bsdata, sizeResult);
+        for (int p = this.bsdata.length; p < size; ++p) { a[p] = f; }
+        byte[] w = new byte[sizeResult];
+        int k;
+        int[] pos1and0 = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02,0x01};
+        for (int i = 0; i < sizeResult; ++i) {
+            k = 0;
+            for (int j = 0; j < pos1and0.length; j++) {
+                if (a[8 * i + j] == t) { k = k | pos1and0[j]; }
+            }
+            w[i] = (byte) k;
+        }
+        return w;
     }
             
 }
